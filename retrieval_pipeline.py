@@ -1,6 +1,5 @@
 from langchain_chroma import Chroma
-from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_core.messages import HumanMessage, SystemMessage
 from dotenv import load_dotenv
 
@@ -9,7 +8,7 @@ load_dotenv()
 persistent_directory = "db/chroma_db"
 
 #load embeddings and vector store 
-embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
+embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 
 db = Chroma(
     persist_directory=persistent_directory,

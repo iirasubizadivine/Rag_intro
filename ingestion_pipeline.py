@@ -1,7 +1,9 @@
 import os
+import shutil
+import time
 from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
 from dotenv import load_dotenv
 
@@ -61,13 +63,12 @@ def split_documents(documents, chunk_size=800, chunk_overlap=200):
 def create_vector_store(chunks, persist_directory="db/chroma_db"):
     print("Creating embeddings and storing in ChromaDB...")
 
-    embeddings = FastEmbedEmbeddings(
-        model_name="BAAI/bge-small-en-v1.5",
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/gemini-embedding-001",
+        max_retries=10,
     )
 
     if os.path.exists(persist_directory):
-        import shutil
-
         shutil.rmtree(persist_directory)
         print(f"Cleared existing vector store at {persist_directory}")
 
@@ -86,6 +87,8 @@ def create_vector_store(chunks, persist_directory="db/chroma_db"):
         batch = chunks[i : i + batch_size]
         vectorstore.add_documents(batch)
         print(f"  Processed {min(i + batch_size, total)}/{total} chunks")
+        if i + batch_size < total:
+            time.sleep(65)
 
     print("Finished creating vector store")
     print(f"Persisted vector store to {persist_directory}...")
