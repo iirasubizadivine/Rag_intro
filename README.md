@@ -13,7 +13,7 @@ into 800-character chunks with 200-character overlap, embeds each chunk with
 `gemini-embedding-001`, and writes the vectors to `db/chroma_db` using cosine similarity.
 
 **2. Retrieval** (`retrieval_pipeline.py`) — embeds the query, searches the vector store for
-the 3 nearest chunks, concatenates them into a prompt, and asks `gemini-3.8-flash` to answer
+the 3 nearest chunks, concatenates them into a prompt, and asks `gemini-2.0-flash` to answer
 using only those chunks. If the answer isn't in the retrieved context, the model is instructed
 to say so rather than guess.
 
